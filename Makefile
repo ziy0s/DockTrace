@@ -1,4 +1,4 @@
-# Production eBPF build system for Learn
+# Production eBPF build system for DockTrace
 
 # Tools
 CLANG    ?= clang
@@ -7,7 +7,7 @@ CC       ?= gcc
 STRIP    ?= strip
 
 # Project
-APP      := Learn
+APP      := docktrace
 SRC_DIR  := src
 BPF_SRC  := $(SRC_DIR)/$(APP).bpf.c
 BPF_OBJ  := $(APP).bpf.o
