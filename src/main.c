@@ -1,6 +1,5 @@
 #define _GNU_SOURCE
 #include "../include/docktrace.skel.h"
-// #include "vmlinux.h"
 #include <asm-generic/errno-base.h>
 #include <bpf/bpf.h>
 #include <bpf/libbpf.h>
@@ -11,8 +10,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-// #include <stdio.h>
-// #include "vmlinux.h"
 
 #ifndef FILEID_KERNFS
 #define FILEID_KERNFS 0xfe
@@ -76,10 +73,6 @@ static int get_container_id_by_path(char *path, char *container) {
 
     char tmp[256];
 
-    // if (!tmp)
-    //     return -1;
-
-
     while (path[i]) {
         if (path[i] == '.')
             break ;
@@ -134,11 +127,6 @@ static int handle_event(void *ctx, void *data, size_t data_sz) {
     if (get_container_id_by_path(path, container_id) < 0)
         return 0;
 
-    // printf("container id => %s\n", container_id);
-
-    // printf("Received Event -> PID: %d, Cgroup: %lld, Comm: %s, Command: %s\n",
-    //         e->pid, e->cgroup_id, e->comm, e->command);
-
     printf("Container:\t%s\n", container_id);
     printf("PID:\t\t%d\n", e->pid);
     printf("Cgroup:\t\t%lld\n", e->cgroup_id);
@@ -159,6 +147,12 @@ unsigned int get_host_namespace_inode() {
 }
 
 int main(void) {
+
+  if (geteuid() != 0) {
+      fprintf(stderr, "Error: This program requires root privileges to run.\n");
+      fprintf(stderr, "Please re-run using 'sudo' or as the root user.\n");
+      return -1;
+  }
 
   struct docktrace_bpf *skel;
 
