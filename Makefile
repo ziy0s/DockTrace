@@ -9,9 +9,10 @@ STRIP    ?= strip
 # Project
 APP      := docktrace
 SRC_DIR  := src
+HEAD_DIR := include
 BPF_SRC  := $(SRC_DIR)/$(APP).bpf.c
 BPF_OBJ  := $(APP).bpf.o
-SKEL     := $(SRC_DIR)/$(APP).skel.h
+SKEL     := $(HEAD_DIR)/$(APP).skel.h
 USER_SRC := $(SRC_DIR)/main.c
 OUTPUT   := $(APP)
 
@@ -38,12 +39,12 @@ endif
 all: $(OUTPUT)
 
 # Step 1: Generate vmlinux.h
-$(SRC_DIR)/vmlinux.h:
+$(HEAD_DIR)/vmlinux.h:
 	@echo "=== Generating vmlinux.h ==="
 	$(BPFTOOL) btf dump file /sys/kernel/btf/vmlinux format c > $@
 
 # Step 2: Compile BPF program
-$(BPF_OBJ): $(BPF_SRC) $(SRC_DIR)/vmlinux.h $(SRC_DIR)/$(APP).h
+$(BPF_OBJ): $(BPF_SRC) $(HEAD_DIR)/vmlinux.h $(HEAD_DIR)/$(APP).h
 	@echo "=== Compiling BPF program ==="
 	$(CLANG) $(BPF_CFLAGS) -c $< -o $@
 
@@ -53,7 +54,7 @@ $(SKEL): $(BPF_OBJ)
 	$(BPFTOOL) gen skeleton $< > $@
 
 # Step 4: Compile user-space program
-$(OUTPUT): $(USER_SRC) $(SKEL) $(SRC_DIR)/$(APP).h
+$(OUTPUT): $(USER_SRC) $(SKEL) $(HEAD_DIR)/$(APP).h
 	@echo "=== Compiling user-space loader ==="
 	$(CC) $(USER_CFLAGS) $< -o $@ $(LDFLAGS)
 

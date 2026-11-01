@@ -1,4 +1,4 @@
-#include "vmlinux.h"
+#include "../include/vmlinux.h"
 #include <bpf/bpf_core_read.h>
 #include <bpf/bpf_helpers.h>
 #include <bpf/bpf_tracing.h>
@@ -30,14 +30,10 @@ struct {
 SEC("tracepoint/syscalls/sys_enter_execve")
 int execve_entry(struct syscall_trace_enter *ctx) {
 
-  // unsigned int host_inum;
-
-  // bpf_map_lookup_elem
   __u32 key = 0;
 
   __u32 *host_inum;
 
-  // unsigned int host_inum = 4026531841;
   u64 cgroup_id = bpf_get_current_cgroup_id();
   struct event *e;
 

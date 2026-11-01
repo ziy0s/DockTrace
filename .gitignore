@@ -1,6 +1,6 @@
 *.o
-*.skel.h
-vmlinux.h
+include/*.skel.h
+include/vmlinux.h
 package.json
 .vscode/
 .idea/
