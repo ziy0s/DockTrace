@@ -17,6 +17,9 @@ By leveraging eBPF CO-RE (Compile Once – Run Everywhere) and kernel file handl
 
 - 📦 Multi-Runtime Support: Detects container contexts across Docker, Podman (Rootful & Rootless) and Kubernetes (crio/containerd).
 
+## 📸 Screenshot
+![program output](./docktrace.png)
+
 ## 🛠️ Architecture Overview
 
 ```
